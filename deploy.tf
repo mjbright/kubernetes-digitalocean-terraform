@@ -19,7 +19,8 @@ variable "do_region" {
 }
 variable "ssh_fingerprint" {}
 variable "ssh_private_key" {
-    default = "~/.ssh/id_rsa"
+    #default = "~/.ssh/id_rsa"
+    default = "secrets/doceanlabs_rsa"
 }
 
 variable "number_of_workers" {
