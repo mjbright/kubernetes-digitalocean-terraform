@@ -65,7 +65,13 @@ export TF_VAR_do_region=fra1
 ```
 The default region is `nyc3`. You can find a list of available regions from [DigitalOcean](https://developers.digitalocean.com/documentation/v2/#list-all-regions).
 
-After setup, call `terraform apply`
+Initially you should run `terraform init` which will install the required Terraform plugins (based on the contents of your deploy.tf file).
+
+```bash
+terraform init
+```
+
+After setup, run `terraform apply`
 
 ```bash
 terraform apply
