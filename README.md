@@ -53,10 +53,10 @@ If you are using an older version of OpenSSH (<6.9), replace the last line with
 export TF_VAR_ssh_fingerprint=$(ssh-keygen -lf ~/.ssh/id_rsa.pub | awk '{print $2}')
 ```
 
-There is a convenience script for you in `./setup_terraform.sh`. Invoke it as
+There is a convenience script for you in `./setup_terraform_vars.rc`. Invoke it as
 
 ```bash
-. ./setup_terraform.sh
+. ./setup_terraform_vars.rc
 ```
 
 Optionally, you can customize the datacenter *region* via:

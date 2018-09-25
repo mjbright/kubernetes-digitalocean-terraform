@@ -1,6 +1,6 @@
 ## Setup terraform envvars
 # Usage:
-#	. ./setup_terraform.sh
+#	. ./setup_terraform_vars.rc
 
 export TF_VAR_do_token=$(cat ./secrets/DO_TOKEN)
 
