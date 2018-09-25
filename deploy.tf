@@ -198,7 +198,7 @@ resource "digitalocean_droplet" "k8s_worker" {
     provisioner "local-exec" {
         when = "destroy"
         command = <<EOF
-export KUBECONFIG=${path.module}/secrets/admin.conf
+export KUBECONFIG=secrets/admin.conf
 kubectl drain --delete-local-data --force --ignore-daemonsets ${self.name}
 kubectl delete nodes/${self.name}
 EOF
@@ -206,13 +206,14 @@ EOF
 }
 
 # use kubeconfig retrieved from master
+            #export KUBECONFIG=secrets/admin.conf
 
 resource "null_resource" "deploy_microbot" {
     depends_on = ["digitalocean_droplet.k8s_worker"]
     provisioner "local-exec" {
         command = <<EOF
-            export KUBECONFIG=${path.module}/secrets/admin.conf
-            sed -e "s/\$EXT_IP1/${digitalocean_droplet.k8s_worker.0.ipv4_address}/" < ${path.module}/02-microbot.yaml > ./secrets/02-microbot.rendered.yaml
+            KUBECONFIG=secrets/admin.conf
+            sed -e "s/\$EXT_IP1/${digitalocean_droplet.k8s_worker.0.ipv4_address}/" < 02-microbot.yaml > ./secrets/02-microbot.rendered.yaml
             until kubectl get pods 2>/dev/null; do printf '.'; sleep 5; done
             kubectl create -f ./secrets/02-microbot.rendered.yaml
 EOF
@@ -223,8 +224,8 @@ resource "null_resource" "deploy_digitalocean_cloud_controller_manager" {
     depends_on = ["digitalocean_droplet.k8s_worker"]
     provisioner "local-exec" {
         command = <<EOF
-            export KUBECONFIG=${path.module}/secrets/admin.conf
-            sed -e "s/\$DO_ACCESS_TOKEN/${var.do_token}/" < ${path.module}/03-do-secret.yaml > ./secrets/03-do-secret.rendered.yaml
+            export KUBECONFIG=secrets/admin.conf
+            sed -e "s/\$DO_ACCESS_TOKEN/${var.do_token}/" < 03-do-secret.yaml > ./secrets/03-do-secret.rendered.yaml
             until kubectl get pods 2>/dev/null; do printf '.'; sleep 5; done
             kubectl create -f ./secrets/03-do-secret.rendered.yaml
             kubectl create -f https://raw.githubusercontent.com/digitalocean/digitalocean-cloud-controller-manager/master/releases/v0.1.3.yml
